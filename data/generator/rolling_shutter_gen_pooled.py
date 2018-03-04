@@ -2,7 +2,13 @@
 
 from __future__ import print_function
 import progressbar
+from multiprocessing import cpu_count, Pool
 from utils import *
+
+def func(filename):
+	rs_sample = DataSample('../oxford/clean_images/' + filename, (256,256), 150)
+	rs_sample.crop()
+	rs_sample.generateRSSamples()
 
 if __name__ == '__main__':
 	dataset_directory = '../'
@@ -22,8 +28,7 @@ if __name__ == '__main__':
 			])
 
 	print('Generating RS dataset...')
-	for pos, filename in enumerate(os.listdir(oxford_directory)):
-		rs_sample = DataSample(oxford_directory + '/' + filename, img_size, samples_per_img)
-		rs_sample.crop()
-		rs_sample.generateRSSamples()
-		bar.update((pos+1)*150)
+
+	with Pool(10) as p:
+		for i in p.imap_unordered(func, os.listdir(oxford_directory)):
+			print(i)

@@ -9,6 +9,8 @@ current_directory=`pwd`
 # Create a directory for Oxford dataset downloads
 mkdir -p ../oxford
 cd ../oxford
+mkdir -p rs_images
+mkdir -p rs_ground_truth
 # Download and extract the dataset
 echo 'Downloading Oxford dataset...'
 curl -L $oxford_images_url > images.tgz
@@ -17,7 +19,7 @@ curl -L $oxford_data_groundtruth_url > ground_truth.tgz
 echo 'Extracting files...'
 mkdir -p images
 tar xf images.tgz -C images
-mkdir -p ground_truth 
+mkdir -p ground_truth
 tar xf ground_truth.tgz -C ground_truth
 
 echo 'Copying good and okay images...'
@@ -29,3 +31,7 @@ for gt_filename in $good_images; do
 		cp images/$img_filename.jpg clean_images/$img_filename.jpg
 	done < ground_truth/$gt_filename
 done
+
+# Download test dataset
+echo 'Downloading Test dataset...'
+curl -L $rangarajan_test_url > ../test.zip

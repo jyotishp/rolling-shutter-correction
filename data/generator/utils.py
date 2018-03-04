@@ -36,19 +36,15 @@ class DataSample(object):
 		self.img_size = img_size
 		self.samples_per_img = samples_per_img
 		self.padding = 50
-		try:
-			os.mkdir('../oxford/rs_images')
-		except Exception as e:
-			pass
 		self.img_name = os.path.basename(img_path)
 
 	def crop(self):
-		img_width = self.img.shape[0]
-		img_height = self.img.shape[1]
-		add_width = self.img_size[0]/2 + self.padding
-		add_height = self.img_size[1]/2 + self.padding
-		self.img = self.img[ int( (img_width/2) - add_width ) : int( (img_width/2) + add_width ),
-							 int( (img_height/2) - add_height ) : int( (img_height/2) + add_height ) ]
+				img_width = self.img.shape[0]
+				img_height = self.img.shape[1]
+				add_width = self.img_size[0]/2 + self.padding
+				add_height = self.img_size[1]/2 + self.padding
+				self.img = self.img[ int( (img_width/2) - add_width ) : int( (img_width/2) + add_width ),
+									 int( (img_height/2) - add_height ) : int( (img_height/2) + add_height ) ]
 
 	def generateRSSamples(self):
 		# Reserve 1/6 of the generated samples for pure transaltional and rotational
@@ -90,10 +86,14 @@ class DataSample(object):
 			tx_start_frame = translation(x_start)
 			t_start_frame = rotation(x_start)
 
+			gt_for_training = []
+
 			for i in range(0, self.img.shape[1]):
 				x = (i + 1) / self.img.shape[1]
 				tx = translation(x) - tx_start_frame
 				t = rotation(x) - t_start_frame
+				gt_for_training.append([x, tx, t])
+				
 				homography = np.array([
 						[ math.cos(t), math.sin(t), tx ],
 						[ -math.sin(t), math.cos(t), 0 ],
@@ -116,4 +116,6 @@ class DataSample(object):
 			rs_img_crop = rs_img[self.padding:self.padding+self.img_size[0], self.padding:self.padding+self.img_size[1]]
 			filename = self.img_name.split('.')[0]
 			cv2.imwrite('../oxford/rs_images/' + filename + '_' + str(sample_count) + '.jpg', rs_img_crop)
+			gt_for_training = np.asarray(gt_for_training)
+			np.savetxt('../oxford/rs_ground_truth/' + filename + '_' + str(sample_count) + '_gt.txt', gt_for_training, delimiter=',')
 		np.savetxt('../oxford/rs_ground_truth/' + filename + '_gt.txt', ground_truth, delimiter=',')
