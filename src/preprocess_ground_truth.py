@@ -17,7 +17,7 @@ def progress(annotation_ids):
 			])
 	return bar
 
-gt_path = './data/oxford/rs_ground_truth/'
+gt_path = '../data/oxford/rs_ground_truth/'
 gt_files = os.listdir(gt_path)
 bar = progress(gt_files)
 ground_truth = {}
@@ -31,4 +31,4 @@ for pos, file in enumerate(gt_files):
 
 bar.update(len(gt_files))
 
-pickle.dump(ground_truth, open('./data/processed/ground_truth.p', 'wb'))
+pickle.dump(ground_truth, open('../data/processed/ground_truth.p', 'wb'))
