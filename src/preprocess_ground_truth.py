@@ -23,7 +23,8 @@ bar = progress(gt_files)
 ground_truth = {}
 for pos, file in enumerate(gt_files):
 	gt = np.genfromtxt(gt_path + file, delimiter = ',')
-	gt = gt[::25, :][:,[1,2]].flatten()
+	gt = gt[50:274, [1,2]]
+	gt = gt[::15, :].flatten()
 	file = file.split('.')[0]
 	ground_truth.update({file: gt})
 	if pos % 50 == 0:
