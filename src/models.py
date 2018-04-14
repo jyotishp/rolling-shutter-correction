@@ -48,3 +48,34 @@ def rowColCNN():
     model = Model(inputs = vanilla_cnn.input, output = motion_features)
     
     return model
+
+def vanillaCNN():
+    vanilla_cnn = Sequential()
+    vanilla_cnn.add(Conv2D(32, (11, 11), input_shape = (256, 256, 3)))
+    vanilla_cnn.add(BatchNormalization())
+    vanilla_cnn.add(Activation('relu'))
+    vanilla_cnn.add(MaxPooling2D(pool_size=(2, 2), strides=2))
+    
+    vanilla_cnn.add(Conv2D(64, (7, 7)))
+    vanilla_cnn.add(BatchNormalization())
+    vanilla_cnn.add(Activation('relu'))
+    vanilla_cnn.add(MaxPooling2D(pool_size=(2, 2), strides=2))
+    
+    vanilla_cnn.add(Conv2D(64, (5, 5)))
+    vanilla_cnn.add(BatchNormalization())
+    vanilla_cnn.add(Activation('relu'))
+    vanilla_cnn.add(MaxPooling2D(pool_size=(2, 2), strides=2))
+    
+    vanilla_cnn.add(Conv2D(64, (3, 3)))
+    vanilla_cnn.add(BatchNormalization())
+    vanilla_cnn.add(Activation('relu'))
+    vanilla_cnn.add(MaxPooling2D(pool_size=(2, 2), strides=2))
+    
+    vanilla_cnn.add(Flatten())
+    vanilla_cnn.add(Dense(1024))
+    vanilla_cnn.add(Activation('tanh'))
+    vanilla_cnn.add(Dense(256))
+    vanilla_cnn.add(Activation('hard_sigmoid'))
+    vanilla_cnn.add(Dense(30))
+    
+    return vanilla_cnn
