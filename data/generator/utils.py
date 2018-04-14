@@ -35,7 +35,7 @@ class DataSample(object):
 		self.img = cv2.imread(img_path)
 		self.img_size = img_size
 		self.samples_per_img = samples_per_img
-		self.padding = 50
+		self.padding = 0
 		self.img_name = os.path.basename(img_path)
 
 	def crop(self):
@@ -45,6 +45,8 @@ class DataSample(object):
 				add_height = self.img_size[1]/2 + self.padding
 				self.img = self.img[ int( (img_width/2) - add_width ) : int( (img_width/2) + add_width ),
 									 int( (img_height/2) - add_height ) : int( (img_height/2) + add_height ) ]
+				filename = self.img_name.split('.')[0]
+				cv2.imwrite('../oxford/rs_images_gt/' + filename + '.jpg', self.img)
 
 	def generateRSSamples(self):
 		# Reserve 1/6 of the generated samples for pure transaltional and rotational
